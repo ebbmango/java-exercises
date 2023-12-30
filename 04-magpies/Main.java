@@ -210,7 +210,7 @@ public class Main {
         return true;
     }
 
-    private static int[] CropReferenceImage (int[][] referenceImageArray) {
+    private static int[] MeasureBorders (int[][] referenceImageArray) {
         int height = referenceImageArray.length;
         int width = referenceImageArray[0].length;
 
@@ -246,14 +246,26 @@ public class Main {
         return new int[] {blankRowsTop, blankRowsBottom, blankRowsLeft, blankRowsRight};
     }
 
+    private static int[][] CropReferenceImage (int[][] referenceImageArray) {
+        int height = referenceImageArray.length;
+        int width = referenceImageArray[0].length;
+        int[] borders = MeasureBorders(referenceImageArray);
+
+        int newHeight = height - borders[0] - borders[1];
+        int newWidth =  width  - borders[2] - borders[3];
+
+        int[][] Xcropped = new int[newWidth][height];
+        System.arraycopy(TransposeMatrix(referenceImageArray), borders[2], Xcropped, 0, newWidth);
+        int[][] Ycropped = new int[newHeight][newWidth];
+        System.arraycopy(TransposeMatrix(Xcropped), borders[0], Ycropped, 0, newHeight);
+
+        return Ycropped;
+    }
+
     public static void main(String[] args) {
         BufferedImage magpieImage = LoadImage("./magpie.tif");
         BufferedImage birdsImage = LoadImage("./birds.tif");
         int[][] magpieArray = ImageToArray(magpieImage);
-
-        PrintRepresentation(magpieArray);
-        int[][] birdsArray = ImageToArray(birdsImage);
-
-        CropReferenceImage(magpieArray);
+        PrintRepresentation(CropReferenceImage(magpieArray));
     }
 }
