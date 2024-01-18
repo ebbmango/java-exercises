@@ -1,18 +1,21 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
     private static BufferedImage LoadImage(String path) {
         File imageFile = new File(path);
-        if (!imageFile.exists())  {
+        if (!imageFile.exists()) {
             throw new IllegalArgumentException("File not found: " + path);
         }
         try {
             return ImageIO.read(imageFile);
-        } catch (IOException e) { // This is quite interesting: exception objects should also be imported and used from external libraries
+        } catch (
+                IOException e) { // This is quite interesting: exception objects should also be imported and used from external libraries
             throw new RuntimeException("Error reading the image: " + e.getMessage());
         }
     }
@@ -55,7 +58,7 @@ public class Main {
                 // purely black-and-white image, I got two values: -1 and -16777216. This is because Java is printing
                 // the result in the decimal system. Converting these values to a hexadecimal numbering system using
                 // the piece of code below...
-                    // System.out.println(String.format("0x%08X", pixel));
+                // System.out.println(String.format("0x%08X", pixel));
                 // ...the values became 0xFFFFFFFF and 0xFF000000 instead, which reveals that the method Java is using
                 // to make the conversions between hexadecimals and decimals is the signed 2's complement.
                 // For reference, please check the following links:
@@ -68,9 +71,9 @@ public class Main {
                 // ourselves. We do it in the following manner:
 
                 // int alpha = (pixel>>24) & 0xff; (OBS: Unused, therefore commented out).
-                int red   = (pixel>>16) & 0xff;
-                int green = (pixel>>8)  & 0xff;
-                int blue  = pixel       & 0xff;
+                int red   = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8)  & 0xff;
+                int blue  = pixel & 0xff;
 
                 // At first, the code just above might make little to no sense at all. Let us take some time to figure
                 // out how exactly does it work and what exactly it is doing.
@@ -184,14 +187,14 @@ public class Main {
     }
 
     // "Prints" the image in the terminal (CAUTION: Use with very small images only!)
-    private static void PrintRepresentation (int[][] imageArray) {
-        for ( int[] row : imageArray ) {
-            for ( int pixel : row) {
-                System.out.print(" " + (pixel > 0 ? " " : 0) );
-            }
-            System.out.println();
-        }
-    }
+//    private static void PrintRepresentation(int[][] imageArray) {
+//        for (int[] row : imageArray) {
+//            for (int pixel : row) {
+//                System.out.print(" " + (pixel > 0 ? 0 : " "));
+//            }
+//            System.out.println();
+//        }
+//    }
 
     private static int[][] TransposeMatrix(int[][] matrix) {
         int height = matrix.length;
@@ -204,13 +207,13 @@ public class Main {
         }
         return transposedMatrix;
     }
-    
+
     private static boolean IsAllEmpty(int[] binaryArray) {
-        for ( int number : binaryArray ) if (number != 0) return false;
+        for (int number : binaryArray) if (number != 0) return false;
         return true;
     }
 
-    private static int[] MeasureBorders (int[][] referenceImageArray) {
+    private static int[] MeasureBorders(int[][] referenceImageArray) {
         int height = referenceImageArray.length;
         int width = referenceImageArray[0].length;
 
@@ -243,16 +246,16 @@ public class Main {
         }
         blankRowsRight = width - (blankRowsRight + 1);
 
-        return new int[] {blankRowsTop, blankRowsBottom, blankRowsLeft, blankRowsRight};
+        return new int[]{blankRowsTop, blankRowsBottom, blankRowsLeft, blankRowsRight};
     }
 
-    private static int[][] CropReferenceImage (int[][] referenceImageArray) {
+    private static int[][] CropReferenceImage(int[][] referenceImageArray) {
         int height = referenceImageArray.length;
         int width = referenceImageArray[0].length;
         int[] borders = MeasureBorders(referenceImageArray);
 
         int newHeight = height - borders[0] - borders[1];
-        int newWidth =  width  - borders[2] - borders[3];
+        int newWidth = width - borders[2] - borders[3];
 
         int[][] Xcropped = new int[newWidth][height];
         System.arraycopy(TransposeMatrix(referenceImageArray), borders[2], Xcropped, 0, newWidth);
@@ -262,10 +265,178 @@ public class Main {
         return Ycropped;
     }
 
+    private static String ArrayToString(int[] array) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int element : array) { stringBuilder.append(element); }
+        return stringBuilder.toString();
+    }
+
+    // This method extracts the relevant pattern (only values bounded by ones) in the first line of the binary matrix
+    private static String MagpiesForehead(int[][] magpieMatrix) {
+        // OBS: this method CANNOT be used (for it will result in an infinite loop) if the first row is fully composed of zeroes!
+        int[] firstRow = magpieMatrix[0];
+
+        // first we get the amount of trailing zeroes
+        int cutLengthTail = firstRow.length;
+        while (firstRow[cutLengthTail-1] == 0) {
+            --cutLengthTail;
+        }
+
+        // then we get the amount of leading zeroes
+        int cutLengthHead = 0;
+        while (firstRow[cutLengthHead] == 0) {
+            ++cutLengthHead;
+        }
+        // then we slice the array to remove them all
+        int[] relevantPattern = Arrays.copyOfRange(firstRow, cutLengthHead, cutLengthTail);
+
+        // now we create another array with ONE leading and ONE trailing zero
+        int[] relevantArray = new int[relevantPattern.length + 2];
+        relevantArray[0] = 0;
+        System.arraycopy(relevantPattern, 0, relevantArray, 1, relevantPattern.length);
+        relevantArray[relevantArray.length - 1] = 0;
+
+        return ArrayToString(relevantArray);
+    }
+
+    // converts an ArrayList of Integers to an array of integers
+    public static int[] ListToArray(ArrayList<Integer> arrayList) {
+        Integer[] array = arrayList.toArray(new Integer[0]);
+
+        int[] intArray = new int[array.length];
+        for (int i = 0; i < array.length; i++) {
+            intArray[i] = array[i];
+        }
+
+        return intArray;
+    }
+
+    public static int[] FindAllSubstringOccurrences(String mainString, String substring) {
+        int index = 0;
+        ArrayList<Integer> indicesList = new ArrayList<>();
+
+        while ((index = mainString.indexOf(substring, index)) != -1) {
+            indicesList.add(index);
+            index += substring.length();
+        }
+
+        return ListToArray(indicesList);
+    }
+
+    public static int[][] TrimMatrix (int[][] matrix, int leftBound, int rightBound, int topBound, int botBound) {
+        int[][] trimmedMatrix = new int[botBound - topBound][rightBound - leftBound];
+
+        for (int i = leftBound; i < rightBound; i++) {
+            for (int j = topBound; j < botBound; j++) {
+                trimmedMatrix[j - topBound][i - leftBound] = matrix[j][i];
+            }
+        }
+
+        return trimmedMatrix;
+    }
+
+    public static int[][] ExtractMagpie (int[][] birdsArray, int X, int Y) {
+        return TrimMatrix(birdsArray, X - 6, X + 64, Y, Y + 39);
+    }
+
+    public static ArrayList<int[]> GetMagpies(int[][] birdsArray, int[][] magpieArray) {
+        int[][] croppedMagpieArray = CropReferenceImage(magpieArray);
+        // here we are extracting the relevant pattern of the first line of the binary
+        String magpiesForehead = MagpiesForehead(croppedMagpieArray);
+
+        // Now we are finding all the points (Y and X coordinates) in the birds matrix in which we find the same pattern as that of a Magpie's forehead
+        // (i.e., all places in which a Magpie can possibly be found) // OBS (IMPORTANT!) : This gives us coordinates in the order Y, X
+        ArrayList<int[]> coordinates = new ArrayList<>();
+        for (int i = 0; i < birdsArray.length; i++) {
+            int[] occurrences = FindAllSubstringOccurrences(ArrayToString(birdsArray[i]), magpiesForehead);
+
+            for (int occurrence : occurrences) {
+                int[] coordinate = {i, occurrence};
+                coordinates.add(coordinate);
+            }
+        }
+
+        ArrayList<int[]> magpiesCoordinates = new ArrayList<>();
+        // And now we are checking each of the found coordinates (possible magpie spots)
+        for (int[] coordinate : coordinates) {
+
+            // We trim the possible magpie out of the birds image
+            int[][] possibleMagpie = ExtractMagpie(birdsArray, coordinate[1], coordinate[0]);
+
+            // And compare it, line by line, to our cropped magpie binary representation
+            boolean isMagpie = true;
+            for (int i = 0; i < possibleMagpie.length; i++) {
+                // If we find that in some line their binary representations differ...
+                if (!Arrays.equals(possibleMagpie[i], croppedMagpieArray[i])) {
+                    // We do not count it
+                    isMagpie = false;
+                    break;
+                }
+            }
+
+            if (isMagpie) {
+                // After that, we add all the ones whose lines are all equal to those of the cropped magpie binary representation
+                magpiesCoordinates.add(coordinate);
+            } // And now we know the exact locations of all the magpies!
+        }
+
+        return magpiesCoordinates;
+    }
+
+    public static int[][] ClearImage (int[][] birdsArray, ArrayList<int[]>magpiesCoordinates) {
+        int height = birdsArray.length;
+        int width = birdsArray[0].length;
+        int[][] blankArray = new int[height][width];
+
+        for (int[] coordinate : magpiesCoordinates) {
+            int X = coordinate[1];
+            int Y = coordinate[0];
+            for (int i = Y; i < Y + 39; i++) {
+                // here we are copying the relevant parts (those with a magpie) from the birdsArray to the blankArray
+                if (X + 64 - (X - 6) >= 0) {
+                    System.arraycopy(birdsArray[i], X - 6, blankArray[i], X - 6, X + 64 - (X - 6));
+                }
+            }
+        }
+        return blankArray;
+    }
+
+    public static void DisplayImage (int[][] onlyMagpiesBinary) {
+        // we first create a blank image
+        BufferedImage image = new BufferedImage(1024, 1024, BufferedImage.TYPE_BYTE_GRAY);
+        Color white = new Color(255, 255, 255);
+        int whiteRGB = white.getRGB();
+
+        int height = onlyMagpiesBinary.length;
+        int width = onlyMagpiesBinary[0].length;
+
+        // now, for every pixel that is a part of a magpie
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (onlyMagpiesBinary[i][j] != 0) {
+                    // we make it white
+                    image.setRGB(j, i, whiteRGB);
+                }
+            }
+        }
+
+        // and now we make an image out of that!
+        try {
+            File outputTiffFile = new File("output.tiff");
+            ImageIO.write(image, "tiff", outputTiffFile);
+        } catch (IOException e) {
+            System.out.println("Error in creating image:\n" + e);
+        }
+    }
+
     public static void main(String[] args) {
         BufferedImage magpieImage = LoadImage("./magpie.tif");
         BufferedImage birdsImage = LoadImage("./birds.tif");
         int[][] magpieArray = ImageToArray(magpieImage);
-        PrintRepresentation(CropReferenceImage(magpieArray));
+        int[][] birdsArray = ImageToArray(birdsImage);
+
+        ArrayList<int[]> magpiesCoordinates = GetMagpies(birdsArray, magpieArray);
+        int[][] clearedArray = ClearImage(birdsArray, magpiesCoordinates);
+        DisplayImage(clearedArray);
     }
 }
