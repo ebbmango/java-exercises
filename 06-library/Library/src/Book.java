@@ -10,4 +10,9 @@ public final class Book extends LibraryItem {
         this.genre = genre;
         this.publisher = publisher;
     }
+
+    public void show () {
+        System.out.println(title + " / " + author + " / " + genre + " / " + publisher);
+
+    }
 }
