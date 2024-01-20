@@ -1,4 +1,4 @@
-public class Book extends LibraryItem {
+public final class Book extends LibraryItem {
     private final String title;
     private final String author;
     private final String genre;

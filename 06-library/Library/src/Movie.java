@@ -1,4 +1,4 @@
-public class Movie extends LibraryItem {
+public final class Movie extends LibraryItem {
     private final String title;
     private final String genre;
     private final String director;
