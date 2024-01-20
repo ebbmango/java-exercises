@@ -1,8 +1,8 @@
 public class Book extends LibraryItem {
-    private String title;
-    private String author;
-    private String genre;
-    private String publisher;
+    private final String title;
+    private final String author;
+    private final String genre;
+    private final String publisher;
 
     public Book(String title, String author, String genre, String publisher) {
         this.title = title;

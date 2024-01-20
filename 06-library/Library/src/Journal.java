@@ -1,9 +1,9 @@
 public class Journal extends LibraryItem {
-    private String title;
-    private String eISSN;
-    private String publisher;
-    private String latestIssue;
-    private String URL;
+    private final String title;
+    private final String eISSN;
+    private final String publisher;
+    private final String latestIssue;
+    private final String URL;
 
     public Journal (String title, String eISSN , String publisher , String latestIssue , String URL) {
         this.title = title;
