@@ -27,4 +27,4 @@ public class FreeFall {
 }
 
 // I just realized after completing the code that the stone was thrown upwards instead of downwards.
-// I shall correct this later, once this class is (thankfully) not graded.
+// I shall correct this later, since this class is (thankfully) not graded.
