@@ -1,2 +1,2 @@
-public class Journal {
+public class Journal extends LibraryItem {
 }

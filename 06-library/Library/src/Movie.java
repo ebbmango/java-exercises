@@ -1,2 +1,2 @@
-public class Movie {
+public class Movie extends LibraryItem {
 }
