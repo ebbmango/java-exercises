@@ -7,10 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
-
 public class Main {
     public static void main(String[] args) {
-        Library library = new Library("./src/books.csv");
+        Library library = new Library("./src/movies.csv", "./src/journals.csv", "./src/books.csv");
         library.printItems();
     }
 }

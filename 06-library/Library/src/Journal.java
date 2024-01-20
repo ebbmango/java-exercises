@@ -12,4 +12,8 @@ public final class Journal extends LibraryItem {
         this.latestIssue = latestIssue;
         this.URL = URL;
     }
+
+    public void show () {
+        System.out.format("%s / %s / %s / %s / %s\n", title, eISSN, publisher, latestIssue, URL);
+    }
 }

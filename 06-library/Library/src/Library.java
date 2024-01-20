@@ -5,19 +5,44 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import java.util.function.Consumer;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class Library {
     // INSTANCE VARIABLES
     ArrayList<LibraryItem> inventory = new ArrayList<>();
 
     // CONSTRUCTOR
-    public Library (String csvFilePath) {
-        loadItems(
-                csvFilePath,
-                values -> inventory.add(new Book(values[0], values[1], values[2], values[4]))
+    public Library(String moviesPath, String journalsPath, String booksPath) {
+        loadItems( // load all movies from their CSV file into the inventory
+                moviesPath,
+                values -> inventory.add(new Movie(
+                        values[1], // title
+                        values[2], // genre
+                        values[4], // director
+                        values[6],  // year
+                        values[7],  // runtime
+                        values[8] // rating
+                ))
+        );
+        loadItems( // load all journals from their CSV file into the inventory
+                journalsPath,
+                values -> inventory.add(new Journal(
+                        values[0],  // title
+                        values[3],  // eISSN
+                        values[4], // publisher,
+                        values[6],  // latest issue
+                        values[12]   // URL
+                ))
+        );
+        loadItems( // load all books from their CSV file into the inventory
+                booksPath,
+                values -> inventory.add(new Book(
+                        values[0], // title
+                        values[1], // author
+                        values[2], // genre
+                        values[4]  // publisher
+                ))
         );
     }
 
