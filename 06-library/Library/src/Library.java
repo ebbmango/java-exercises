@@ -226,30 +226,5 @@ public class Library {
             } // end if Faculty Member
         }
     }
-
-//    USED FOR DEBUGGING:
-//
-//    public void showUsers() {
-//        for (LibraryUser user : users) {
-//            user.show();
-//            System.out.println();
-//        }
-//    }
-//
-//    public void showItems() {
-//        for (LibraryItem item : inventory) {
-//            item.show();
-//            System.out.println();
-//        }
-//    }
-//
-//    public ArrayList<LibraryUser> getUsers() {
-//         return users;
-//    }
-//
-//    public ArrayList<LibraryItem> getInventory() {
-//        return inventory;
-//    }
-
 }
 
