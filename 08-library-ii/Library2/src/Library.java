@@ -12,10 +12,12 @@ import java.util.function.Consumer;
 
 
 public class Library {
+    double debtThreshold;
     ArrayList<LibraryItem> inventory = new ArrayList<>();
     ArrayList<LibraryUser> users = new ArrayList<>();
 
-    public Library(String moviesPath, String journalsPath, String booksPath, int facultyMembersAmount, int studentsAmount, int punctualUsersAmount) {
+    public Library(String moviesPath, String journalsPath, String booksPath, int facultyMembersAmount, int studentsAmount, int punctualUsersAmount, double debtThreshold) {
+        this.debtThreshold = debtThreshold;
         loadUsers(facultyMembersAmount, studentsAmount, punctualUsersAmount);
         loadItems(
                 moviesPath, values -> inventory.add(new Movie(
@@ -152,6 +154,11 @@ public class Library {
             // ADDITION:
             user.updateBalance(); // charges the user for each unreturned overdue item currently at their possession
 
+            // ADDITION:
+            if (user.getBalance() <= debtThreshold) {
+                user.block();
+            }
+
             if (user instanceof Student) {
                 if (user.getActiveBookLoans() < user.getMaxBookLoanAmount()) {
                     if (user.willLoanBook()) {
@@ -188,10 +195,14 @@ public class Library {
             }
         }
     }
-
+//    TASK: "Based on last week's task, add [...] a method to display users with late refunds for a given day"
 //    ADDITION
-    public List<LibraryUser> getDebtors () {
-        return users.stream().filter(user -> user.getActiveLoans().stream().anyMatch(LibraryItem::isOverdue)).toList();
+    public void displayDebtors() {
+        List<LibraryUser> debtors = users.stream().filter(user -> user.getActiveLoans().stream().anyMatch(LibraryItem::isOverdue)).toList();
+        for (LibraryUser debtor : debtors) {
+            System.out.println(debtor);
+            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------");
+        }
     }
 }
 

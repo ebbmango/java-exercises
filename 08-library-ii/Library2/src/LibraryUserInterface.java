@@ -72,12 +72,12 @@ public interface LibraryUserInterface {
     boolean willLoanMovie();
 
     /**
-     * For each {@link LibraryItem} currently under the {@link LibraryUser}'s possession, check if they are going to return it to the {@link Library} and if so, perform such return
+     * For each {@link LibraryItem} currently under the {@link LibraryUser}'s possession, checks if they are going to return it to the {@link Library} and if so, performs such return
      */
     ArrayList<LibraryItem> solveItemsReturn();
 
     /**
-     * Borrow a {@link LibraryItem} from the {@link Library} and add it to the {@link LibraryUser}'s list of loans
+     * Borrows a {@link LibraryItem} from the {@link Library} and adds it to the {@link LibraryUser}'s list of loans
      */
     void loan(LibraryItem item);
 
@@ -115,6 +115,9 @@ public interface LibraryUserInterface {
     //   "Modify the task so that [...] the displayed user account (the items borrowed) is done through the default method defined in the interface."
     //                                      ^^^^^^^^^ -> If it is "displayed", it must be "printed out".
     //    ADDITION:
+    /**
+     * Displays the {@link LibraryUser}'s active loans ({@link LibraryItem})
+     */
     default void displayActiveLoans() {
         System.out.format("The user <ID:%s> currently possesses the following loans:\n", getID());
         for (LibraryItem item : getActiveLoans()) {
