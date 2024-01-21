@@ -1,22 +1,19 @@
 import java.util.ArrayList;
 
 public abstract sealed class LibraryUser permits Student, FacultyMember {
-    // UNIQUE IDENTIFIER
-    protected int id;
-    private static int nextId = 1;
-
-    // LOAN SETTINGS
-    protected int[] maxLoanLength; // books, journals, movies
-    protected int[] maxLoanAmount; // books, journals, movies
-
-    // PROBABILITIES SETTINGS
-    protected boolean isPunctual;
     private static final double[] LOAN_PROBABILITIES = {0.05, 0.08, 0.05}; // books, journals, movies
     private static final double RETURN_PROBABILITY = 0.02; // all items
-
+    private static int nextId = 1;
     // USER'S INVENTORY
     private final ArrayList<LibraryItem> activeLoans = new ArrayList<>();
     private final int[] activeLoansCount = new int[3]; // books, journals, movies
+    // UNIQUE IDENTIFIER
+    protected int id;
+    // LOAN SETTINGS
+    protected int[] maxLoanLength; // books, journals, movies
+    protected int[] maxLoanAmount; // books, journals, movies
+    // PROBABILITIES SETTINGS
+    protected boolean isPunctual;
     private double balance = 0;
 
     LibraryUser(boolean isPunctual) {
@@ -29,9 +26,11 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
     public int getActiveBookLoans() {
         return activeLoansCount[0];
     }
+
     public int getActiveJournalLoans() {
         return activeLoansCount[1];
     }
+
     public int getActiveMovieLoans() {
         return activeLoansCount[2];
     }
@@ -78,7 +77,9 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         return Utilities.roll(LOAN_PROBABILITIES[2]);
     }
 
-    public ArrayList<LibraryItem> solveItemsReturn () {
+    // METHODS
+
+    public ArrayList<LibraryItem> solveItemsReturn() {
         ArrayList<LibraryItem> itemsToReturn = new ArrayList<>();
 
         for (LibraryItem item : activeLoans) {
@@ -102,7 +103,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         switch (itemType) {
             case "Book":
                 if (activeLoansCount[0] == maxLoanAmount[0]) {
-                    throw new IllegalArgumentException("The user <" + id +"> cannot borrow any more books. Current amount: " + activeLoansCount[0]);
+                    throw new IllegalArgumentException("The user <" + id + "> cannot borrow any more books. Current amount: " + activeLoansCount[0]);
                 } else {
                     activeLoansCount[0]++;
                     activeLoans.add(item);
@@ -111,7 +112,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 break;
             case "Journal":
                 if (activeLoansCount[1] == maxLoanAmount[1]) {
-                    throw new IllegalArgumentException("The user <" + id +"> cannot borrow any more journals. Current amount: " + activeLoansCount[1]);
+                    throw new IllegalArgumentException("The user <" + id + "> cannot borrow any more journals. Current amount: " + activeLoansCount[1]);
                 } else {
                     activeLoansCount[1]++;
                     activeLoans.add(item);
@@ -120,7 +121,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 break;
             case "Movie":
                 if (activeLoansCount[2] == maxLoanAmount[2]) {
-                    throw new IllegalArgumentException("The user <" + id +"> cannot borrow any more movies. Current amount: " + activeLoansCount[2]);
+                    throw new IllegalArgumentException("The user <" + id + "> cannot borrow any more movies. Current amount: " + activeLoansCount[2]);
                 } else {
                     activeLoansCount[2]++;
                     activeLoans.add(item);
@@ -129,6 +130,16 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 break;
         }
 
+    }
+
+    // PRINT
+
+    public void show() {
+        System.out.format("ID: %s <%s> <$s>\nActive Loans:\n", id, this.getClass().getName(), isPunctual ? "punctual" : "not punctual");
+        for (LibraryItem activeLoan : activeLoans) {
+            activeLoan.show();
+        }
+        System.out.format("Current Balance: %s\n-------------------------------\n", balance);
     }
 
 }

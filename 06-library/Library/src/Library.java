@@ -1,12 +1,16 @@
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+// external libraries
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+// imports for file reading
+
 import java.util.ArrayList;
 import java.util.function.Consumer;
+// imports for data handling
 
 public class Library {
     // INSTANCE VARIABLES
@@ -79,7 +83,7 @@ public class Library {
     }
 
     // OBS: definitely not the most efficient solution
-    public ArrayList<LibraryItem> getAvailableItems(String itemType) {
+    private ArrayList<LibraryItem> getAvailableItems(String itemType) {
         ArrayList<LibraryItem> availableItems = new ArrayList<>();
 
         switch (itemType) {
@@ -216,9 +220,7 @@ public class Library {
                     refillAvailabilities(returnedItem, availableBooks, availableJournals, availableMovies);
                 }
 
-                // -> Everything else
-                // CODE COMES HERE
-            }
+            } // end if Faculty Member
         }
     }
 }

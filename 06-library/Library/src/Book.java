@@ -14,5 +14,6 @@ public final class Book extends LibraryItem {
 
     public void show() {
         System.out.format("%s / %s / %s / %s\n", title, author, genre, publisher);
+        super.show();
     }
 }

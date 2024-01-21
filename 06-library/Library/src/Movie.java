@@ -20,6 +20,7 @@ public final class Movie extends LibraryItem {
 
     public void show() {
         System.out.format("%s / %s / %s / %s / %s / %s \n", title, genre, director, year, runtime, rating);
+        super.show();
     }
 
 }

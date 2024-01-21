@@ -16,6 +16,7 @@ public final class Journal extends LibraryItem {
 
     public void show() {
         System.out.format("%s / %s / %s / %s / %s\n", title, eISSN, publisher, latestIssue, URL);
+        super.show();
     }
 
 }

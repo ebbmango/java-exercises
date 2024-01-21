@@ -1,26 +1,16 @@
-import java.util.Collection;
-
 public abstract sealed class LibraryItem permits Book, Journal, Movie {
-    protected int id;
     private static int nextId = 1;
+    protected int id;
+    protected double dailyFee;
+    private int overdueDays;
+    private boolean isAvailable = true;
 
     LibraryItem() {
         this.id = nextId++;
     }
 
-    private int overdueDays;
-    private boolean isAvailable = true;
-
-//    private
-
-    protected double dailyFee;
-
     public void passDay() {
         overdueDays++;
-    }
-
-    public void show() {
-        // meant to be overridden
     }
 
     public int daysOverdue() {
@@ -61,5 +51,14 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
 
     public double getDailyFee() {
         return dailyFee;
+    }
+
+
+    public void show() {
+        if (isAvailable) {
+            System.out.println("Currently available.");
+        } else {
+            System.out.format("Days overdue: %s / Daily fee: %s / Total fine: %s\n", overdueDays, dailyFee, computeFine());
+        }
     }
 }
