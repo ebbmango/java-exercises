@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 public class Library {
     // INSTANCE VARIABLES
     ArrayList<LibraryItem> inventory = new ArrayList<>();
+    ArrayList<LibraryUser> users = new ArrayList<>();
 
     // CONSTRUCTOR
     public Library(String moviesPath, String journalsPath, String booksPath) {
