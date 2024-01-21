@@ -6,7 +6,7 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
         // meant to be overridden
     }
 
-    public double getFee() {
+    public double getDailyFee() {
         return dailyFee;
     }
 }
