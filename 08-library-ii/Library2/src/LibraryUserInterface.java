@@ -1,0 +1,2 @@
+public class LibraryUserInterface {
+}
