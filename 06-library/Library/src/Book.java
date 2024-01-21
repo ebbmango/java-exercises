@@ -9,9 +9,10 @@ public final class Book extends LibraryItem {
         this.author = author;
         this.genre = genre;
         this.publisher = publisher;
+        this.dailyFee = 0.5;
     }
 
-    public void show () {
+    public void show() {
         System.out.format("%s / %s / %s / %s\n", title, author, genre, publisher);
     }
 }

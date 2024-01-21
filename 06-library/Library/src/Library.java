@@ -15,35 +15,26 @@ public class Library {
     // CONSTRUCTOR
     public Library(String moviesPath, String journalsPath, String booksPath) {
         loadItems( // load all movies from their CSV file into the inventory
-                moviesPath,
-                values -> inventory.add(new Movie(
-                        values[1], // title
+                moviesPath,values -> inventory.add(new Movie(values[1], // title
                         values[2], // genre
                         values[4], // director
-                        values[6],  // year
-                        values[7],  // runtime
-                        values[8] // rating
-                ))
-        );
+                        values[6], // year
+                        values[7], // runtime
+                        values[8]  // rating
+                )));
         loadItems( // load all journals from their CSV file into the inventory
-                journalsPath,
-                values -> inventory.add(new Journal(
-                        values[0],  // title
+                journalsPath, values -> inventory.add(new Journal(values[0],  // title
                         values[3],  // eISSN
-                        values[4], // publisher,
+                        values[4],  // publisher,
                         values[6],  // latest issue
-                        values[12]   // URL
-                ))
-        );
+                        values[12]  // URL
+                )));
         loadItems( // load all books from their CSV file into the inventory
-                booksPath,
-                values -> inventory.add(new Book(
-                        values[0], // title
+                booksPath, values -> inventory.add(new Book(values[0], // title
                         values[1], // author
                         values[2], // genre
                         values[4]  // publisher
-                ))
-        );
+                )));
     }
 
     private void loadItems(String path, Consumer<String[]> consumer) {
@@ -51,7 +42,7 @@ public class Library {
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setDelimiter(";").setSkipHeaderRecord(true).build();
 
         // reading the CSV file
-        try (Reader inputStream = new FileReader(path)) { // c
+        try (Reader inputStream = new FileReader(path)) {
             // parsing the CSV file
             CSVParser records = csvFormat.parse(inputStream);
             // funnelling each record (as an array of strings) into the consumer passed into the loader function
