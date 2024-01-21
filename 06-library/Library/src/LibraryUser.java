@@ -14,11 +14,12 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
     protected int[] maxLoanAmount; // books, journals, movies
     // PROBABILITIES SETTINGS
     protected boolean isPunctual;
-    private double balance = 0;
+    private double balance;
 
     LibraryUser(boolean isPunctual) {
         this.id = nextId++;
         this.isPunctual = isPunctual;
+        this.balance = 0;
     }
 
     // GETTERS: ACTIVE LOANS
@@ -81,17 +82,16 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
 
     public ArrayList<LibraryItem> solveItemsReturn() {
         ArrayList<LibraryItem> itemsToReturn = new ArrayList<>();
-
         for (LibraryItem item : activeLoans) {
             if (Utilities.roll(RETURN_PROBABILITY) || (item.daysOverdue() == 0) && isPunctual) {
                 itemsToReturn.add(item);
-                item.returnToLibrary();   // we make the item available again
             }
         }
 
         for (LibraryItem item : itemsToReturn) {
             balance -= item.computeFine(); // we fine the user according to the amount of days the item is overdue
             activeLoans.remove(item); // we remove it from the user's active loans
+            item.returnToLibrary();   // we make the item available again
         }
 
         return itemsToReturn;

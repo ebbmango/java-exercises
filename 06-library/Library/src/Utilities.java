@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Utilities {
 
-    public static String printTag (String string) {
+    public static String printTag(String string) {
         return string.isBlank() ? "<no-info>" : string;
     }
 
@@ -23,9 +23,8 @@ public class Utilities {
         }
 
         double randomValue = Math.random();
-        double probabilityThreshold = probability * 100;
 
-        return randomValue <= probabilityThreshold;
+        return randomValue <= probability;
     }
 
     public static void shuffleArray(boolean[][] array) {
