@@ -5,7 +5,6 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -123,7 +122,7 @@ public class Library {
         }
     }
 
-    private void borrowRandom (ArrayList<LibraryItem> availableItems, LibraryUser user) {
+    private void borrowRandom(ArrayList<LibraryItem> availableItems, LibraryUser user) {
         int pickedItemIndex = Utilities.getRandomIndex(availableItems);
 
         // if there are still available items...
@@ -132,7 +131,22 @@ public class Library {
             availableItems.remove(pickedItemIndex); // we remove the item from the list of availabilities
 
             user.loan(pickedItem); // we loan it under the user's name
-            pickedItem.borrow(); // we change the item's status to borrowed
+            pickedItem.borrow(user); // we change the item's status to borrowed
+        }
+    }
+
+    private void refillAvailabilities(LibraryItem returnedItem, ArrayList<LibraryItem> availableBooks, ArrayList<LibraryItem> availableJournals, ArrayList<LibraryItem> availableMovies) {
+        switch (returnedItem.getClass().getName()) {
+            case "Book":
+                availableBooks.add(returnedItem);
+                break;
+            case "Journal":
+                availableJournals.add(returnedItem);
+                break;
+            case "Movie":
+                availableMovies.add(returnedItem);
+                break;
+
         }
     }
 
@@ -173,15 +187,21 @@ public class Library {
                     }
                 }
                 // -> Returning
-
-
+                // get the list of items that the user will return (if any)
+                for (LibraryItem returnedItem : user.solveItemsReturn()) {
+                    // and add them back to the availabilities' lists
+                    refillAvailabilities(returnedItem, availableBooks, availableJournals, availableMovies);
+                }
                 // -> Everything else
 
             } // end if Student
 
             // IF IT IS A FACULTY MEMBER
 
+
             if (user instanceof FacultyMember) {
+
+                // -> Borrowing
                 if (user.willLoanBook()) {
                     borrowRandom(availableBooks, user);
                 }
@@ -191,6 +211,13 @@ public class Library {
                 if (user.willLoanMovie()) {
                     borrowRandom(availableMovies, user);
                 }
+
+                // -> Returning
+                for (LibraryItem returnedItem : user.solveItemsReturn()) {
+                    refillAvailabilities(returnedItem, availableBooks, availableJournals, availableMovies);
+                }
+
+                // -> Everything else
                 // CODE COMES HERE
             }
         }

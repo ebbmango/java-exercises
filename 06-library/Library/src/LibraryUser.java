@@ -77,9 +77,22 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         return Utilities.roll(LOAN_PROBABILITIES[2]);
     }
 
-//    public ArrayList<LibraryItem> willReturnItem () {
-//        return Utilities.roll(
-//    }
+    public ArrayList<LibraryItem> solveItemsReturn () {
+        ArrayList<LibraryItem> itemsToReturn = new ArrayList<>();
+
+        for (LibraryItem item : activeLoans) {
+            if (Utilities.roll(RETURN_PROBABILITY) || (item.daysOverdue() == 0) && isPunctual) {
+                itemsToReturn.add(item);
+                item.returnToLibrary();   // we make the item available again
+            }
+        }
+
+        for (LibraryItem item : itemsToReturn) {
+            activeLoans.remove(item); // we remove it from the user's active loans
+        }
+
+        return itemsToReturn;
+    }
 
     public void loan(LibraryItem item) {
         String itemType = item.getClass().getName();
@@ -91,7 +104,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 } else {
                     activeLoansCount[0]++;
                     activeLoans.add(item);
-                    item.borrow();
+                    item.borrow(this);
                 }
                 break;
             case "Journal":
@@ -100,7 +113,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 } else {
                     activeLoansCount[1]++;
                     activeLoans.add(item);
-                    item.borrow();
+                    item.borrow(this);
                 }
                 break;
             case "Movie":
@@ -109,7 +122,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 } else {
                     activeLoansCount[2]++;
                     activeLoans.add(item);
-                    item.borrow();
+                    item.borrow(this);
                 }
                 break;
         }

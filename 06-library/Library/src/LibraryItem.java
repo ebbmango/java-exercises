@@ -8,7 +8,7 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
         this.id = nextId++;
     }
 
-    private int daysOverdue;
+    private int overdueDays;
     private boolean isAvailable = true;
 
 //    private
@@ -23,16 +23,31 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
 //
 //    }
 //
-//    public int daysOverdue() {
-//
-//    }
+    public int daysOverdue() {
+        return overdueDays;
+    }
 
     public boolean isAvailable() {
         return isAvailable;
     }
 
-    public void borrow() {
+    public void borrow(LibraryUser user) {
+        switch (this.getClass().getName()) {
+            case "Book":
+                overdueDays = -user.getMaxBookLoanLength();
+                break;
+            case "Journal":
+                overdueDays = -user.getMaxJournalLoanLength();
+                break;
+            case "Movie":
+                overdueDays = -user.getMaxMovieLoanLength();
+                break;
+        }
         isAvailable = false;
+    }
+
+    public void returnToLibrary() {
+        isAvailable = true;
     }
 
     public double getDailyFee() {
