@@ -20,23 +20,26 @@ public class Library {
     // CONSTRUCTOR
     public Library(String moviesPath, String journalsPath, String booksPath, int facultyMembersAmount, int studentsAmount, int punctualUsersAmount) {
         loadUsers(facultyMembersAmount, studentsAmount, punctualUsersAmount);
-        loadItems( // load all movies from their CSV file into the inventory
-                moviesPath, values -> inventory.add(new Movie(values[1], // title
+        loadItems( // load all MOVIES from their CSV file into the inventory
+                moviesPath, values -> inventory.add(new Movie(
+                        values[1], // title
                         values[2], // genre
                         values[4], // director
                         values[6], // year
                         values[7], // runtime
                         values[8]  // rating
                 )));
-        loadItems( // load all journals from their CSV file into the inventory
-                journalsPath, values -> inventory.add(new Journal(values[0],  // title
+        loadItems( // load all JOURNALS from their CSV file into the inventory
+                journalsPath, values -> inventory.add(new Journal(
+                        values[0],  // title
                         values[3],  // eISSN
                         values[4],  // publisher,
                         values[6],  // latest issue
                         values[12]  // URL
                 )));
-        loadItems( // load all books from their CSV file into the inventory
-                booksPath, values -> inventory.add(new Book(values[0], // title
+        loadItems( // load all BOOKS from their CSV file into the inventory
+                booksPath, values -> inventory.add(new Book(
+                        values[0], // title
                         values[1], // author
                         values[2], // genre
                         values[4]  // publisher
@@ -233,6 +236,7 @@ public class Library {
     public void showItems() {
         for (LibraryItem item : inventory) {
             item.show();
+            System.out.println();
         }
     }
 }

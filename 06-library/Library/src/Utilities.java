@@ -3,6 +3,10 @@ import java.util.ArrayList;
 
 public class Utilities {
 
+    public static String printTag (String string) {
+        return string.isBlank() ? "<no-info>" : string;
+    }
+
     public static <T> int getRandomIndex(ArrayList<T> list) {
 
         if (list == null || list.isEmpty()) {

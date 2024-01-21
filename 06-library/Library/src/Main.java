@@ -6,7 +6,7 @@ public class Main {
             library.passDay();
         }
 
-        library.showUsers();
+        library.showItems();
 
     }
 }

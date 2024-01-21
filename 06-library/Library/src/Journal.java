@@ -15,7 +15,7 @@ public final class Journal extends LibraryItem {
     }
 
     public void show() {
-        System.out.format("%s / %s / %s / %s / %s\n", title, eISSN, publisher, latestIssue, URL);
+        System.out.format("Title: %s / e-ISSN: %s / Publisher: %s / Latest Issue: %s / URL: %s\n", Utilities.printTag(title), Utilities.printTag(eISSN), Utilities.printTag(publisher), Utilities.printTag(latestIssue), Utilities.printTag(URL));
         super.show();
     }
 

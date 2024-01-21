@@ -19,7 +19,7 @@ public final class Movie extends LibraryItem {
     }
 
     public void show() {
-        System.out.format("%s / %s / %s / %s / %s / %s \n", title, genre, director, year, runtime, rating);
+        System.out.format("Title: %s / Genre: %s / Director: %s / Year: %s / Runtime: %s / Rating: %s \n", Utilities.printTag(title), Utilities.printTag(genre), Utilities.printTag(director), Utilities.printTag(year), Utilities.printTag(runtime), Utilities.printTag(rating));
         super.show();
     }
 

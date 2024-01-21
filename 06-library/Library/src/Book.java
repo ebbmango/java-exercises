@@ -1,3 +1,4 @@
+
 public final class Book extends LibraryItem {
     private final String title;
     private final String author;
@@ -13,7 +14,7 @@ public final class Book extends LibraryItem {
     }
 
     public void show() {
-        System.out.format("%s / %s / %s / %s\n", title, author, genre, publisher);
+        System.out.format("Title: %s / Author: %s / Genre: %s / Publisher: %s\n", Utilities.printTag(title), Utilities.printTag(author), Utilities.printTag(genre), Utilities.printTag(publisher));
         super.show();
     }
 }
