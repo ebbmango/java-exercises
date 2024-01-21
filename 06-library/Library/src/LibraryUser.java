@@ -139,7 +139,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         for (LibraryItem activeLoan : activeLoans) {
             activeLoan.show();
         }
-        System.out.format("Current Balance: %s\n-------------------------------\n", balance);
+        System.out.format("Current Balance: %s\n", balance);
     }
 
 }

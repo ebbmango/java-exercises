@@ -230,6 +230,7 @@ public class Library {
     public void showUsers() {
         for (LibraryUser user : users) {
             user.show();
+            System.out.println();
         }
     }
 
@@ -239,5 +240,14 @@ public class Library {
             System.out.println();
         }
     }
+
+    public ArrayList<LibraryUser> getUsers() {
+         return users;
+    }
+
+    public ArrayList<LibraryItem> getInventory() {
+        return inventory;
+    }
+
 }
 

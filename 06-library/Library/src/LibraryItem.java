@@ -10,7 +10,7 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
     }
 
     public void passDay() {
-        overdueDays++;
+        overdueDays += 1;
     }
 
     public int daysOverdue() {
@@ -22,7 +22,7 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
     }
 
     public double computeFine() {
-        return dailyFee * overdueDays;
+        return isOverdue() ? dailyFee * overdueDays : 0;
     }
 
     public boolean isAvailable() {
