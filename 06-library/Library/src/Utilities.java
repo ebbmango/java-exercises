@@ -1,8 +1,19 @@
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Utilities {
 
-    public static boolean rollTheDice(double probability) {
+    public static <T> int getRandomIndex(ArrayList<T> list) {
+
+        if (list == null || list.isEmpty()) {
+            return -1;
+        }
+
+        Random random = new Random();
+        return random.nextInt(list.size());
+    }
+
+    public static boolean roll(double probability) {
         if (probability < 0.0 || probability > 1.0) {
             throw new IllegalArgumentException("Invalid input: Probability must be between 0.");
         }

@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -17,7 +18,7 @@ public class Library {
     public Library(String moviesPath, String journalsPath, String booksPath, int facultyMembersAmount, int studentsAmount, int punctualUsersAmount) {
         loadUsers(facultyMembersAmount, studentsAmount, punctualUsersAmount);
         loadItems( // load all movies from their CSV file into the inventory
-                moviesPath,values -> inventory.add(new Movie(values[1], // title
+                moviesPath, values -> inventory.add(new Movie(values[1], // title
                         values[2], // genre
                         values[4], // director
                         values[6], // year
@@ -78,6 +79,33 @@ public class Library {
         }
     }
 
+    // OBS: definitely not the most efficient solution
+    public ArrayList<LibraryItem> getAvailableItems(String itemType) {
+        ArrayList<LibraryItem> availableItems = new ArrayList<>();
+
+        switch (itemType) {
+            case "Book":
+                for (LibraryItem item : inventory) {
+                    if (item instanceof Book && item.isAvailable()) availableItems.add(item);
+                }
+                break;
+            case "Journal":
+                for (LibraryItem item : inventory) {
+                    if (item instanceof Journal && item.isAvailable()) availableItems.add(item);
+                }
+                break;
+            case "Movie":
+                for (LibraryItem item : inventory) {
+                    if (item instanceof Movie && item.isAvailable()) availableItems.add(item);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("There are no items of the type \"" + itemType + "\".");
+        }
+
+        return availableItems;
+    }
+
     private void loadItems(String path, Consumer<String[]> consumer) {
         // setting up the configuration for the parsing of the CSV file by the external library
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setDelimiter(";").setSkipHeaderRecord(true).build();
@@ -95,28 +123,77 @@ public class Library {
         }
     }
 
-//    public void printUsers() {
-//        int facultyMembers = 0;
-//        int students = 0;
-//
-//        for (LibraryUser user : users) {
-//            System.out.println(user);
-//            if (user.getClass().getName().equals("FacultyMember")) {
-//                facultyMembers++;
-//            }
-//            if (user.getClass().getName().equals("Student")) {
-//                students++;
-//            }
-//        }
-//
-//        System.out.println(facultyMembers + " " + students);
-//    }
+    private void borrowRandom (ArrayList<LibraryItem> availableItems, LibraryUser user) {
+        int pickedItemIndex = Utilities.getRandomIndex(availableItems);
 
-//    public void printItems() {
-//        for (LibraryItem item : inventory) {
-//            item.show();
-//        }
-//    }
+        // if there are still available items...
+        if (pickedItemIndex != -1) {
+            LibraryItem pickedItem = availableItems.get(pickedItemIndex); // we get the item
+            availableItems.remove(pickedItemIndex); // we remove the item from the list of availabilities
 
+            user.loan(pickedItem); // we loan it under the user's name
+            pickedItem.borrow(); // we change the item's status to borrowed
+        }
+    }
+
+    // OBS: holy cow this code will explode anyone's computer
+    public void passDay() {
+        // code here what happens whenever a day passes
+
+//        HERE WE ARE MAKING AVAILABILITIES LISTS FOR EVERY DAY AND UPDATING IT ACCORDING TO EACH USER'S ACTIONS
+        ArrayList<LibraryItem> availableBooks = getAvailableItems("Book");
+        ArrayList<LibraryItem> availableJournals = getAvailableItems("Journal");
+        ArrayList<LibraryItem> availableMovies = getAvailableItems("Movie");
+
+        for (LibraryUser user : users) {
+            // HOW EACH USER BEHAVES FOR EACH DAY
+
+            // IF IT IS A STUDENT
+            // -> Borrowing
+            if (user instanceof Student) {
+                // if the user can still loan BOOKS
+                if (user.getActiveBookLoans() < user.getMaxBookLoanAmount()) {
+                    // roll the dice to see if the user will borrow a book
+                    if (user.willLoanBook()) { // if they do...
+                        borrowRandom(availableBooks, user); // we borrow a random book under their name
+                    }
+                }
+                // if the user can still loan JOURNALS
+                if (user.getActiveJournalLoans() < user.getMaxJournalLoanAmount()) {
+                    // roll the dice to see if the user will borrow a journal
+                    if (user.willLoanJournal()) { // if they do...
+                        borrowRandom(availableJournals, user); // we borrow a random journal under their name
+                    }
+                }
+                // if the user can still loan MOVIES
+                if (user.getActiveMovieLoans() < user.getMaxMovieLoanAmount()) {
+                    // roll the dice to see if the user will borrow a movie
+                    if (user.willLoanMovie()) { // if they do...
+                        borrowRandom(availableMovies, user); // we borrow a random movie under their name
+                    }
+                }
+                // -> Returning
+
+
+                // -> Everything else
+
+            } // end if Student
+
+            // IF IT IS A FACULTY MEMBER
+
+            if (user instanceof FacultyMember) {
+                if (user.willLoanBook()) {
+                    borrowRandom(availableBooks, user);
+                }
+                if (user.willLoanJournal()) {
+                    borrowRandom(availableJournals, user);
+                }
+                if (user.willLoanMovie()) {
+                    borrowRandom(availableMovies, user);
+                }
+                // CODE COMES HERE
+            }
+        }
+    }
 }
 
