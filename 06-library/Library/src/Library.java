@@ -131,7 +131,6 @@ public class Library {
             availableItems.remove(pickedItemIndex); // we remove the item from the list of availabilities
 
             user.loan(pickedItem); // we loan it under the user's name
-            pickedItem.borrow(user); // we change the item's status to borrowed
         }
     }
 
@@ -159,9 +158,12 @@ public class Library {
         ArrayList<LibraryItem> availableJournals = getAvailableItems("Journal");
         ArrayList<LibraryItem> availableMovies = getAvailableItems("Movie");
 
+        for (LibraryItem item : inventory) {
+            item.passDay();
+        }
+
         for (LibraryUser user : users) {
             // HOW EACH USER BEHAVES FOR EACH DAY
-
             // IF IT IS A STUDENT
             // -> Borrowing
             if (user instanceof Student) {
@@ -192,13 +194,10 @@ public class Library {
                     // and add them back to the availabilities' lists
                     refillAvailabilities(returnedItem, availableBooks, availableJournals, availableMovies);
                 }
-                // -> Everything else
 
             } // end if Student
 
             // IF IT IS A FACULTY MEMBER
-
-
             if (user instanceof FacultyMember) {
 
                 // -> Borrowing

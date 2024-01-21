@@ -17,6 +17,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
     // USER'S INVENTORY
     private final ArrayList<LibraryItem> activeLoans = new ArrayList<>();
     private final int[] activeLoansCount = new int[3]; // books, journals, movies
+    private double balance = 0;
 
     LibraryUser(boolean isPunctual) {
         this.id = nextId++;
@@ -88,6 +89,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         }
 
         for (LibraryItem item : itemsToReturn) {
+            balance -= item.computeFine(); // we fine the user according to the amount of days the item is overdue
             activeLoans.remove(item); // we remove it from the user's active loans
         }
 
@@ -104,7 +106,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 } else {
                     activeLoansCount[0]++;
                     activeLoans.add(item);
-                    item.borrow(this);
+                    item.borrowItem(this);
                 }
                 break;
             case "Journal":
@@ -113,7 +115,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 } else {
                     activeLoansCount[1]++;
                     activeLoans.add(item);
-                    item.borrow(this);
+                    item.borrowItem(this);
                 }
                 break;
             case "Movie":
@@ -122,7 +124,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 } else {
                     activeLoansCount[2]++;
                     activeLoans.add(item);
-                    item.borrow(this);
+                    item.borrowItem(this);
                 }
                 break;
         }

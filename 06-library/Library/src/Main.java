@@ -6,12 +6,8 @@ public class Main {
             library.passDay();
         }
 
-//        var items = library.getAvailableItems("Book");
-//        for ( var item : items ) {
-//            System.out.println(item);
-//        }
-//
-//        System.out.println(Utilities.getRandomIndex(items));
+
+
     }
 }
 
