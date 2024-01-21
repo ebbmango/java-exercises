@@ -38,6 +38,14 @@ public class Library {
                 )));
     }
 
+    private LibraryUser generateUser(boolean isFacultyMember, boolean isPunctual) {
+        if (isFacultyMember) {
+            return new FacultyMember(isPunctual);
+        } else {
+            return new Student(isPunctual);
+        }
+    }
+
     private void loadItems(String path, Consumer<String[]> consumer) {
         // setting up the configuration for the parsing of the CSV file by the external library
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder().setDelimiter(";").setSkipHeaderRecord(true).build();
