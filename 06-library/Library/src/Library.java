@@ -223,5 +223,17 @@ public class Library {
             } // end if Faculty Member
         }
     }
+
+    public void showUsers() {
+        for (LibraryUser user : users) {
+            user.show();
+        }
+    }
+
+    public void showItems() {
+        for (LibraryItem item : inventory) {
+            item.show();
+        }
+    }
 }
 

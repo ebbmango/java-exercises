@@ -135,7 +135,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
     // PRINT
 
     public void show() {
-        System.out.format("ID: %s <%s> <$s>\nActive Loans:\n", id, this.getClass().getName(), isPunctual ? "punctual" : "not punctual");
+        System.out.format("ID: %s <%s> <%s>\nActive Loans:\n", id, this.getClass().getName(), isPunctual ? "punctual" : "not punctual");
         for (LibraryItem activeLoan : activeLoans) {
             activeLoan.show();
         }
