@@ -14,7 +14,8 @@ public class Library {
     ArrayList<LibraryUser> users = new ArrayList<>();
 
     // CONSTRUCTOR
-    public Library(String moviesPath, String journalsPath, String booksPath) {
+    public Library(String moviesPath, String journalsPath, String booksPath, int facultyMembersAmount, int studentsAmount, int punctualUsersAmount) {
+        loadUsers(facultyMembersAmount, studentsAmount, punctualUsersAmount);
         loadItems( // load all movies from their CSV file into the inventory
                 moviesPath,values -> inventory.add(new Movie(values[1], // title
                         values[2], // genre
@@ -36,6 +37,37 @@ public class Library {
                         values[2], // genre
                         values[4]  // publisher
                 )));
+    }
+
+    private void loadUsers(int facultyMembers, int studentsAmount, int punctualAmount) {
+        int usersAmount = facultyMembers + studentsAmount;
+
+        if (punctualAmount > usersAmount) {
+            throw new IllegalArgumentException("Invalid input: Punctual people cannot be greater than total people.");
+        }
+
+        // we create the array of arrays of booleans
+        boolean[][] members = new boolean[usersAmount][2];
+
+        // we fill it with the desired amount of facultyMembers
+        for (int i = 0; i < facultyMembers; i++) {
+            members[i] = new boolean[]{true, false};
+        }
+
+        // we shuffle the array
+        Utilities.shuffleArray(members);
+
+        // we make 66 random members punctual
+        for (int i = 0; i < punctualAmount; i++) {
+            members[i][1] = true;
+        }
+
+        // we load each member into the usersArrayList
+        for (boolean[] member : members) {
+            boolean isFacultyMember = member[0];
+            boolean isPunctual = member[1];
+            users.add(generateUser(isFacultyMember, isPunctual));
+        }
     }
 
     private LibraryUser generateUser(boolean isFacultyMember, boolean isPunctual) {
@@ -63,11 +95,28 @@ public class Library {
         }
     }
 
-    public void printItems() {
-        for (LibraryItem item : inventory) {
-            item.show();
-        }
-    }
+//    public void printUsers() {
+//        int facultyMembers = 0;
+//        int students = 0;
+//
+//        for (LibraryUser user : users) {
+//            System.out.println(user);
+//            if (user.getClass().getName().equals("FacultyMember")) {
+//                facultyMembers++;
+//            }
+//            if (user.getClass().getName().equals("Student")) {
+//                students++;
+//            }
+//        }
+//
+//        System.out.println(facultyMembers + " " + students);
+//    }
+
+//    public void printItems() {
+//        for (LibraryItem item : inventory) {
+//            item.show();
+//        }
+//    }
 
 }
 
