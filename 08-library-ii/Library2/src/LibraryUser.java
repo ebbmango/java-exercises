@@ -1,18 +1,17 @@
 import java.util.ArrayList;
 
-public abstract sealed class LibraryUser permits Student, FacultyMember {
+public abstract sealed class LibraryUser implements LibraryUserInterface permits Student, FacultyMember {
+    public int getID() {
+        return id;
+    }
     private static final double[] LOAN_PROBABILITIES = {0.05, 0.08, 0.05}; // books, journals, movies
     private static final double RETURN_PROBABILITY = 0.02; // all items
     private static int nextId = 1;
-    // USER'S INVENTORY
     private final ArrayList<LibraryItem> activeLoans = new ArrayList<>();
     private final int[] activeLoansCount = new int[3]; // books, journals, movies
-    // UNIQUE IDENTIFIER
     protected int id;
-    // LOAN SETTINGS
-    protected int[] maxLoanLength; // books, journals, movies
     protected int[] maxLoanAmount; // books, journals, movies
-    // PROBABILITIES SETTINGS
+    protected int[] maxLoanLength; // books, journals, movies
     protected boolean isPunctual;
     private double balance;
 
@@ -22,7 +21,7 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         this.balance = 0;
     }
 
-    // GETTERS: ACTIVE LOANS
+    public ArrayList<LibraryItem> getActiveLoans() { return activeLoans; }
 
     public int getActiveBookLoans() {
         return activeLoansCount[0];
@@ -36,8 +35,6 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         return activeLoansCount[2];
     }
 
-    // GETTERS: MAX LOAN AMOUNT
-
     public int getMaxBookLoanAmount() {
         return maxLoanAmount[0];
     }
@@ -49,8 +46,6 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
     public int getMaxMovieLoanAmount() {
         return maxLoanAmount[2];
     }
-
-    // GETTERS: MAX LOAN LENGTH
 
     public int getMaxBookLoanLength() {
         return maxLoanLength[0];
@@ -64,8 +59,6 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         return maxLoanLength[2];
     }
 
-    // GETTERS: PROBABILITIES
-
     public boolean willLoanBook() {
         return Utilities.roll(LOAN_PROBABILITIES[0]);
     }
@@ -78,7 +71,15 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         return Utilities.roll(LOAN_PROBABILITIES[2]);
     }
 
-    // METHODS
+    // ADDITION
+    public void updateBalance() {
+        balance -= getDailyBalance();
+    }
+
+    // ADDITION
+    public double getBalance() {
+        return balance;
+    }
 
     public ArrayList<LibraryItem> solveItemsReturn() {
         ArrayList<LibraryItem> itemsToReturn = new ArrayList<>();
@@ -89,9 +90,16 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
         }
 
         for (LibraryItem item : itemsToReturn) {
-            balance -= item.computeFine(); // we fine the user according to the amount of days the item is overdue
-            activeLoans.remove(item); // we remove it from the user's active loans
-            item.returnToLibrary();   // we make the item available again
+// It seems I misinterpreted last assignment's instructions, it said:
+// "Design the method computeFine, that computes the fine for this item, if the item is returned with the delay."
+// And I interpreted that the fine should only be computed once the item was returned.
+// The fine should, however, be updated DAILY.
+// That is why the next line of code is commented out: it is part of the old implementation that has been replaced.
+
+//          MODIFICATION:
+//          balance -= item.computeFine(); // <COMMENTED OUT>
+            activeLoans.remove(item);
+            item.returnToLibrary();
         }
 
         return itemsToReturn;
@@ -129,17 +137,16 @@ public abstract sealed class LibraryUser permits Student, FacultyMember {
                 }
                 break;
         }
-
     }
 
-    // PRINT
-
-    public void show() {
-        System.out.format("ID: %s <%s> <%s>\nActive Loans:\n", id, this.getClass().getName(), isPunctual ? "punctual" : "not punctual");
+    @Override
+    public String toString() {
+        StringBuilder userInfo = new StringBuilder(String.format("ID: %s <%s> <%s>\nActive Loans:\n", id, this.getClass().getName(), isPunctual ? "punctual" : "not punctual"));
         for (LibraryItem activeLoan : activeLoans) {
-            activeLoan.show();
+            userInfo.append(activeLoan.toString()).append("\n");
         }
-        System.out.format("Current Balance: %s\n", balance);
+        userInfo.append("Current Balance: %s").append(balance);
+        return userInfo.toString();
     }
 
 }

@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 
@@ -186,6 +187,11 @@ public class Library {
                 }
             }
         }
+    }
+
+//    ADDITION
+    public List<LibraryUser> getDebtors () {
+        return users.stream().filter(user -> user.getActiveLoans().stream().anyMatch(LibraryItem::isOverdue)).toList();
     }
 }
 
