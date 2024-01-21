@@ -18,9 +18,10 @@ public final class Movie extends LibraryItem {
         this.dailyFee = 5.0;
     }
 
-    public void show() {
-        System.out.format("Title: %s / Genre: %s / Director: %s / Year: %s / Runtime: %s / Rating: %s \n", Utilities.printTag(title), Utilities.printTag(genre), Utilities.printTag(director), Utilities.printTag(year), Utilities.printTag(runtime), Utilities.printTag(rating));
-        super.show();
+//    ADDITION
+    @Override
+    public String toString() {
+        return String.format("Title: %s / Genre: %s / Director: %s / Year: %s / Runtime: %s / Rating: %s \n", Utilities.printTag(title), Utilities.printTag(genre), Utilities.printTag(director), Utilities.printTag(year), Utilities.printTag(runtime), Utilities.printTag(rating)) + super.toString();
     }
 
 }

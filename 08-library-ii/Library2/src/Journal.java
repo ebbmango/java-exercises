@@ -14,9 +14,10 @@ public final class Journal extends LibraryItem {
         this.dailyFee = 2.0;
     }
 
-    public void show() {
-        System.out.format("Title: %s / e-ISSN: %s / Publisher: %s / Latest Issue: %s / URL: %s\n", Utilities.printTag(title), Utilities.printTag(eISSN), Utilities.printTag(publisher), Utilities.printTag(latestIssue), Utilities.printTag(URL));
-        super.show();
+//    ADDITION
+    @Override
+    public String toString() {
+        return String.format("Title: %s / e-ISSN: %s / Publisher: %s / Latest Issue: %s / URL: %s\n", Utilities.printTag(title), Utilities.printTag(eISSN), Utilities.printTag(publisher), Utilities.printTag(latestIssue), Utilities.printTag(URL)) + super.toString();
     }
 
 }

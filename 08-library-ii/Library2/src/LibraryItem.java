@@ -53,12 +53,13 @@ public abstract sealed class LibraryItem permits Book, Journal, Movie {
         return dailyFee;
     }
 
-
-    public void show() {
+//    ADDITION
+    @Override
+    public String toString() {
         if (isAvailable) {
-            System.out.println("Currently available.");
+            return "Currently available.";
         } else {
-            System.out.format("Days overdue: %s / Daily fee: %s / Total fine: %s\n", overdueDays, dailyFee, computeFine());
+            return String.format("Days overdue: %s / Daily fee: %s / Total fine: %s\n", overdueDays, dailyFee, computeFine());
         }
     }
 }
