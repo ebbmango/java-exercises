@@ -81,10 +81,6 @@ public interface LibraryUserInterface {
      */
     void loan(LibraryItem item);
 
-    //    TASK 1)
-    //    Based on last week's task, add the feature, for a single user, to check their account balance for the day and the
-    //    sum of late refund penalties.
-
     /**
      * Returns an ArrayList of all the {@link LibraryUser}'s active loans
      */
@@ -111,10 +107,6 @@ public interface LibraryUserInterface {
      */
     double getBalance();
 
-    //    TASK:
-    //   "Modify the task so that [...] the displayed user account (the items borrowed) is done through the default method defined in the interface."
-    //                                      ^^^^^^^^^ -> If it is "displayed", it must be "printed out".
-    //    ADDITION:
     /**
      * Displays the {@link LibraryUser}'s active loans ({@link LibraryItem})
      */

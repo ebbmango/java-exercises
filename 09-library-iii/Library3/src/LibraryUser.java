@@ -102,14 +102,6 @@ public abstract sealed class LibraryUser implements LibraryUserInterface permits
         }
 
         for (LibraryItem item : itemsToReturn) {
-// It seems I misinterpreted last assignment's instructions, it said:
-// "Design the method computeFine, that computes the fine for this item, if the item is returned with the delay."
-// And I interpreted that the fine should only be computed once the item was returned.
-// The fine should, however, be updated DAILY.
-// That is why the next line of code is commented out: it is part of the old implementation that has been replaced.
-
-//          MODIFICATION:
-//          balance -= item.computeFine(); // <COMMENTED OUT>
             activeLoans.remove(item);
             item.returnToLibrary();
         }
@@ -118,8 +110,7 @@ public abstract sealed class LibraryUser implements LibraryUserInterface permits
     }
 
     public void loan(LibraryItem item) {
-        // ADDITION:
-        if (!isBlocked) { // only allow if the user is not blocked
+        if (!isBlocked) {
             String itemType = item.getClass().getName();
             switch (itemType) {
                 case "Book":

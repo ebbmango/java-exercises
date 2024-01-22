@@ -2,8 +2,6 @@ public final class Movie extends LibraryItem {
     private final String title;
     private final String genre;
     private final String director;
-
-    // made into Strings for inability to fix "NumberFormatException"
     private final String year;
     private final String runtime;
     private final String rating;

@@ -124,6 +124,7 @@ public class Library {
             LibraryItem pickedItem = availableItems.get(pickedItemIndex);
             availableItems.remove(pickedItemIndex);
             user.loan(pickedItem);
+//            String.format("User <%s> borrowed item <%s>", user, item);
         }
     }
 
@@ -152,7 +153,7 @@ public class Library {
 
         for (LibraryUser user : users) {
             // ADDITION:
-            user.updateBalance(); // charges the user for each unreturned overdue item currently at their possession
+            user.updateBalance();
 
             // ADDITION:
             if (user.getBalance() <= debtThreshold) {
@@ -195,8 +196,12 @@ public class Library {
             }
         }
     }
-//    TASK: "Based on last week's task, add [...] a method to display users with late refunds for a given day"
-//    ADDITION
+
+//  ADDITION
+    public ArrayList<LibraryItem> getItems() {
+        return inventory;
+    }
+
     public void displayDebtors() {
         List<LibraryUser> debtors = users.stream().filter(user -> user.getActiveLoans().stream().anyMatch(LibraryItem::isOverdue)).toList();
         for (LibraryUser debtor : debtors) {
@@ -205,4 +210,3 @@ public class Library {
         }
     }
 }
-
