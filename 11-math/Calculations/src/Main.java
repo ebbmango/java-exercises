@@ -33,7 +33,6 @@ public class Main {
                 if (!stack.isEmpty()) {
                     int openIndex = stack.pop();
                     pairs.add(new int[]{openIndex, i}); // we pair the two of them! :)
-                    System.out.println("Pair found: (" + openIndex + ", " + i + ")");
                 } else { // this means that there are unopened parentheses: the expression is faulty!
                     throw new IllegalArgumentException("syntax error: ')' expected");
                 }
@@ -44,7 +43,15 @@ public class Main {
         }
 
         // Transforms the ArrayList<int[]> into a List<Pair>
-        return pairs.stream().map(pair -> new Pair(pair[0], pair[1])).collect(Collectors.toList());
+        var parenthesesGroups =  pairs.stream().map(pair -> new Pair(pair[0], pair[1])).toList();
+
+        for (var group : parenthesesGroups) {
+            String[] newArray = new String[group.end - group.start + 1];
+            System.arraycopy(array, group.start, newArray, 0, newArray.length);
+            group.capture = newArray;
+        }
+
+        return parenthesesGroups;
     }
 
     private static List<Pair> sortPairs(List<Pair> pairs) {
@@ -53,10 +60,11 @@ public class Main {
         for (int i = 0; i < pairsAmount; i++) {
             var firstPair = pairs.get(i);
             // with each other pair of parentheses
-            for (var SecondPair : pairs) {
+            for (var secondPair : pairs) {
                 // if one of them is inside the other
-                if (SecondPair.start > firstPair.start && firstPair.end > SecondPair.end) {
+                if (secondPair.start > firstPair.start && firstPair.end > secondPair.end) {
                     // we increment the number of nestings of the encapsulating pair
+                    secondPair.nestedIn = firstPair;
                     firstPair.nestings++;
                 }
             }
@@ -115,19 +123,45 @@ public class Main {
         }
     }
 
+
+
+    private static String[] solveChunk(String[] serializedString) {
+        serializedString = performOperation(serializedString, "/"); // solve all divisions
+        serializedString = performOperation(serializedString, "*"); // solve all multiplications
+        serializedString = performOperation(serializedString, "-"); // solve all subtractions
+        serializedString = performOperation(serializedString, "+"); // solve all additions
+        return serializedString;
+    }
+
+    public static void solveParenthesesGroup(String[] serializedString, List<Pair> groups) {
+        for (var group : groups) {
+            String[] newArray = new String[group.end - group.start + 1];
+            System.arraycopy(serializedString, group.start, newArray, 0, newArray.length);
+            group.capture = newArray;
+        }
+
+        for (var group : groups) {
+
+        }
+    }
+
     public static void main(String[] args) {
-        String expression = "(5+3*6/5+5*4/5+5=";
-
-        // first perform all divisions
-        // them perform all multiplications
-        // then perform all subtractions
-        // then perform all additions
-
+        String expression = "((5+3)*6)/5+5*4/(5+5)=";
+        // we first serialize the string
         var serializedString = serialize(expression);
+
+        // then we get all of its parentheses groups
         var parentheses = sortPairs(catchParentheses(serializedString));
 
-        System.out.println(Arrays.toString(serializedString));
-        System.out.println(Arrays.toString(performOperation(serializedString, "+")));
+        // now we solve each parentheses group (from the inside out)
+//        for (var group : parentheses) {
+//            System.out.println(group);
+//        }
+
+        solveParenthesesGroup(serializedString, parentheses);
+
+//        System.out.println(Arrays.toString(serializedString));
+//        System.out.println(Arrays.toString(performOperation(serializedString, "+")));
 
 //
 //        int index;
@@ -137,7 +171,7 @@ public class Main {
 //        } while (index != -1);
 //
 //
-//        System.out.println(Arrays.toString(newArray));
+//        System.out.println(Arrays.toString(solveChunk(serializedString)));
 
 
 //        for (var pair : parentheses) {

@@ -3,6 +3,11 @@ class Pair {
     public int end;
     public int nestings = 0;
 
+    public String[] capture;
+    public Pair nestedIn;
+
+    public double value = 0;
+
     public Pair(int start, int end) {
         this.start = start;
         this.end = end;
